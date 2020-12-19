@@ -11,7 +11,7 @@
 ## Created : <2017-08-27>
 ## Updated: Time-stamp: <2017-09-25 17:14:34>
 ##-------------------------------------------------------------------
-from slackclient import SlackClient
+from slack import WebClient
 import os
 import slackbot
 
@@ -21,7 +21,7 @@ def update_message(channel_id, ts_id, mesg):
 
     """
     icon_emoji = ':white_check_mark: %s' % mesg
-    slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+    slack_client = WebClient(os.environ.get('SLACK_BOT_TOKEN'))
     slack_client.api_call(
         "chat.update",
         channel=channel_id,
@@ -37,7 +37,7 @@ def send_interactive_message(username, im_id, chann_id):
 
     """
     icon_emoji = ':white_check_mark:'
-    slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+    slack_client = WebClient(os.environ.get('SLACK_BOT_TOKEN'))
     channels_call = slack_client.api_call("im.list")
     slack_client.api_call(
         "chat.postMessage",
@@ -62,7 +62,7 @@ def send_message_without_button(username, msg, chann_id):
     """
 
     """
-    slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+    slack_client = WebClient(os.environ.get('SLACK_BOT_TOKEN'))
     channels_call = slack_client.api_call("im.list")
     user_id = slackbot.get_bot_id(username, slack_client)
     slack_client.api_call(

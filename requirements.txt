@@ -1,4 +1,5 @@
 pymysql
-jenkins
+python-jenkins
 slackbot
 slackclient
+flask

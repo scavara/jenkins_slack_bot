@@ -14,7 +14,7 @@
 import os
 import time
 import subprocess
-from slackclient import SlackClient
+import slack
 import slack_cmd_process
 import threading
 import python_mysql
@@ -30,21 +30,6 @@ def get_user_name(username, slack_client):
         for user in users:
             if 'name' in user and user.get('id') == username:
                 return user.get('name')
-
-
-# return bot_id of the user
-def get_bot_id(bot_name, slack_client):
-    """
-        This function gets the id of bot based on its name in slack team.
-        We need the id because it allows us to parse the message directed at bot.
-
-    """
-    api_call = slack_client.api_call("users.list")
-    if api_call.get('ok'):
-        users = api_call.get('members')
-        for user in users:
-            if 'name' in user and user.get('name') == bot_name:
-                return user.get('id')
 
 
 def get_im_id(user_id, slack_client):
@@ -162,14 +147,18 @@ if __name__ == "__main__":
     elif os.environ.get('JENKINS_PASS') is None:
         print("JENKINS_PASS env variable is not defined")
 
-    slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+    slack_token = os.environ['SLACK_BOT_TOKEN'] 
+    slack_client = slack.RTMClient(token=slack_token)
     BOT_NAME = os.environ.get('CHATBOT_NAME')
-    BOT_ID = get_bot_id(BOT_NAME, slack_client)
+    BOT_ID = os.environ.get('CHATBOOT_ID')
+     
     AT_BOT = "!"
     threads = []
 
     WEBSOCKET_DELAY = 1  # 1 second delay between reading from firehose
-    if slack_client.rtm_connect():
+    ##if slack_client.rtm_connect():
+    ##@slack.RTMClient.run_on(event='message')
+    if slack_client.start():
         print("JenkinsBot_RTM connected and running!")
         while True:
             sc = slack_client.rtm_read()

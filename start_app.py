@@ -12,7 +12,7 @@
 ## Updated: Time-stamp: <2017-09-25 17:14:31>
 ##-------------------------------------------------------------------
 from flask import Flask, request, make_response, Response
-from slackclient import SlackClient
+from slack import WebClient
 import json
 import os
 import slackbot
@@ -49,7 +49,7 @@ def message_actions():
         mesg = "Your request has been sent to the Admin for the Approval"
         if user_id == username:
             slack_message.update_message(chan_id, msg_ts, mesg)
-            slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+            slack_client = WebClient(os.environ.get('SLACK_BOT_TOKEN'))
             SLACK_NAME = os.environ.get('APPROVER_SLACK_NAME')
             userid = slackbot.get_bot_id(SLACK_NAME, slack_client)
             im_id = slackbot.get_im_id(userid, slack_client)
@@ -91,7 +91,7 @@ if __name__ == "__main__":
         print ("JENKINS_USER env variable is not defined")
     elif os.environ.get('JENKINS_PASS') is None:
         print ("JENKINS_PASS env variable is not defined")
-    slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+    slack_client = WebClient(os.environ.get('SLACK_BOT_TOKEN'))
     app.run(host='0.0.0.0', port='80')
 
 ## File : start_app.py ends
